@@ -1,0 +1,15 @@
+#!/bin/bash
+#
+mailuser='email@domain.ch'
+echo "mailgrabber for $mailuser"
+read -p "pwd for $mailuser: " mailpwd
+
+cd mailgrabber
+python3 mailgrabber.py \
+--mailserver=mailserver.ch --mailuser=$mailuser --mailpwd=$mailpwd \
+--mapfile=data/mapfile.csv \
+--export=txt \
+--exportdir=data/txt/ \
+--mailarchiv=data/mailarchiv/ \
+--maildel=0
+
