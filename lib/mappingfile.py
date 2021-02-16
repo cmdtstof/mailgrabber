@@ -35,6 +35,11 @@ class Mappingfile:
     
     
     def getExportFilename(self, to): #<str1@str2 >(filename, exporter)
+        #TODO check for unwandet chars (eg <asdjlfasd>)
+        
+        to = to.lower() #TODO use only lowercase
+        
+        
         filename = self.cfg['exportdir'] + self.splitTo(to) + ".txt"  #default filename
         
         if to in self.mapfile:

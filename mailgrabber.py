@@ -47,7 +47,7 @@ class App:
                 'exportappend': self.opt['--exportappend'],
                 'septitle': ': ',
                 'nl': {'txt': '\n'},
-                'mailend': {'txt': '*************'}
+                'mailend': {'txt': '*************\n'}
                 }
             }
         return cfg
@@ -94,47 +94,41 @@ if __name__ == '__main__':
     ms.connect()
     nums = ms.getDraftsNums()
     cupw("nums=", nums)
+    m = lib.maily.Maily(app.cfg['mail'])
     
     for num in nums:
         cupw("******num=", num)
         # ~ typ, data = self.server.fetch(num, '(RFC822)')
         typ, data = ms.getMailNum(num, '(RFC822)')
         cupw("data=", data)
-        m = lib.maily.Maily(app.cfg['mail'])
-        if m.setMail(data):
-            cupw("******** processing mail=", m.getTo())
-            
-    
-    
-    
-    
-    # ~ m = lib.maily.Maily(app.cfg['mail'])
-    
-    # ~ for mail in ms.nextMail(): #TODO should be a mail object
-        # ~ if m.setMail(mail): #check and set
-            # ~ cupw("******** processing mail=", m.getTo())
-            # ~ (exportFilename,exporter) = mf.getExportFilename(m.getTo())
-            
-            # ~ if exporter == "txt":
-                # ~ wr = lib.writer.txt.Exporter(app.cfg['export'])
-                # ~ wr.add(exportFilename, m.getMail())
-                # ~ cupw("mail written into=", exportFilename)
-                
-            # ~ else:
-                # ~ cupw("not supported exporter=", exporter)
-                
-            # ~ #save mail to archive
-            # ~ filename = m.saveMail()
-            # ~ cupw("mail saved to=", filename)
-            
-            # ~ #deleted mail on server
-            # ~ if app.opt['--maildel']:
-                # ~ ms.delMail(m.getMail())
-                # ~ cupw("mail deleted=", m.getMail())
-                
-        # ~ else:
-            # ~ cupw("******** NOT processing=", mail)
+        # ~ m = lib.maily.Maily(app.cfg['mail'])
+        m.setMail(data)
+        if m.checkGrabberMail():
+            to = m.getTo()
+            cupw("******** processing mail=", to)
+            (exportFilename,exporter) = mf.getExportFilename(to)
 
+            if exporter == "txt":
+                wr = lib.writer.txt.Exporter(app.cfg['export'])
+                wr.add(exportFilename, m.getMailDict())
+                cupw("mail written into=", exportFilename)
+                
+            else:
+                cupw("not supported exporter=", exporter)
+                
+            #save mail to archive #TODO txt exporter verwenden!!!
+            archivFilename = m.saveMail()
+            cupw("mail saved to=", archivFilename)
+            
+            #deleted mail on server
+            if int(app.opt['--maildel']):
+                ms.delMail(num)
+                cupw("mail deleted=", num)
+                
+        else:
+            cupw("******** NOT processing=", num)
+            
+            
     ms.closer()        
         
         

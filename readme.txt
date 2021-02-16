@@ -5,10 +5,14 @@ mailgrabber
 3) saves mail in archiv folder
 4) del mail in mailbox (option)
 
+TODO##########################################33
+>>> code
+
+
 
 #### improvments
-- schreibt mails je nach TO: in specific file (india@allg > india_allg.odt)
-- erstellen einer liste aller TO: adressen mit mapping zu specific file
+- DONE: schreibt mails je nach TO: in specific file (india@allg > india_allg.odt)
+- DONE: erstellen einer liste aller TO: adressen mit mapping zu specific file
  
 #### usage:
 ~/bin/mailgrabber [options > code]
@@ -33,7 +37,4 @@ python3 test/app_mailgrabber.py -v
 - getoptions
 - ms.connect
 - for mail in ms.nextMail()
-
-
-
 

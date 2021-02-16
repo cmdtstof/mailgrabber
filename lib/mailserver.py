@@ -10,7 +10,7 @@ class Mailserver:
 
     def __init__(self, cfg):
         self.cfg = cfg
-        self.mailTest = [
+        self.mailTest = [ #TODO for test create email object
             {
                 "to": "test1@news",
                 "subject": "subject1",
@@ -38,20 +38,15 @@ class Mailserver:
 
         
     def closer(self):
+        self.server.expunge()
         self.server.close()
         self.server.logout()
+        cupw("mailserver expunged, closed and logouted")
     
     def connect(self):
         cupw("connect to mailserver=", self.cfg)
         self.server = imaplib.IMAP4_SSL(self.cfg['server'])
         self.server.login(self.cfg['user'], self.cfg['pwd'])
-
-        # ~ self.server.select('Drafts')
-        # ~ typ, data = self.server.search(None, 'ALL')
-        # ~ for num in data[0].split():
-            # ~ cupw("******num=", num)
-            # ~ typ, data = self.server.fetch(num, '(RFC822)')
-            # ~ cupw("data=", data)
         
         
     def getDraftsNums(self): #>nums (list))
@@ -65,23 +60,12 @@ class Mailserver:
             
     def getMailNum(self, num, part):
         typ, data = self.server.fetch(num, '(RFC822)')
-        cupw(typ)
-        cupw(data)
+        # ~ cupw(typ)
+        # ~ cupw(data)
         return typ, data
         
-        
     
-    def nextMail(self):
-        if self.cfg['server'] == 'test':
-            return self.mailTest
-        else:
-            cupw("TODO load mails from=", self.cfg['server'])
-            
-            
-            
-            
-            return []
 
-    def delMail(self, mail):
-        if self.cfg['server'] != 'test':
-            cupw("#TODO del mail in mailserver")
+    def delMail(self, num):
+        self.server.store(num, '+FLAGS', '\\Deleted')
+
